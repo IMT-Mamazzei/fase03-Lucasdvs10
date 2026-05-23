@@ -11,6 +11,7 @@ public class ValidadorFase3Test {
         Lexer lexer = new Lexer(new StringReader(codigo));
         parser parser1 = new parser(lexer);
         parser1.parse(); // Se a sintaxe for inválida, lançará RuntimeException
+
     }
 
     @Test
