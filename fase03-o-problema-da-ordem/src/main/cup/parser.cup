@@ -5,7 +5,12 @@ import java_cup.runtime.*;
 parser code {:
     // Método chamado pelo CUP quando encontra um erro sintático
     public void syntax_error(Symbol cur_token) {
-        throw new RuntimeException("Erro Sintático na linha " + cur_token.left + ", coluna " + cur_token.right);
+        throw new RuntimeException(
+            "Erro Sintático na linha " +
+            cur_token.left +
+            ", coluna " +
+            cur_token.right
+        );
     }
 :}
 
@@ -19,7 +24,7 @@ terminal String ID, NUMBER;
 terminal String ADD_OP, MUL_OP, REL_OP;
 
 /* ========================================================================= */
-/* DECLARAÇÃO DOS NÃO-TERMINAIS (VARIÁVEIS DA GRAMÁTICA)                     */
+/* DECLARAÇÃO DOS NÃO-TERMINAIS                                              */
 /* ========================================================================= */
 
 non terminal program, stmt_list, stmt;
@@ -27,30 +32,35 @@ non terminal assign_stmt, if_stmt, while_stmt, block_stmt, null_stmt;
 non terminal expr;
 
 /* ========================================================================= */
-/* PRECEDÊNCIA E ASSOCIATIVIDADE                                             */
+/* PRECEDÊNCIA                                                               */
 /* ========================================================================= */
-
-/* Menor precedência → maior precedência */
 
 precedence left REL_OP;
 precedence left ADD_OP;
 precedence left MUL_OP;
 
 /* ========================================================================= */
-/* REGRAS DA GRAMÁTICA                                                       */
+/* REGRAS                                                                     */
 /* ========================================================================= */
 
 start with program;
 
+
 /* Programa = lista de comandos */
-program ::= stmt_list ;
+
+program ::= stmt_list
+          ;
+
 
 /* Lista recursiva */
+
 stmt_list ::= stmt_list stmt
             | stmt
             ;
 
-/* Tipos possíveis de comando */
+
+/* Tipos de comando */
+
 stmt ::= assign_stmt
        | if_stmt
        | while_stmt
@@ -58,23 +68,40 @@ stmt ::= assign_stmt
        | null_stmt
        ;
 
-assign_stmt ::= ID ASSIGN expr SEMI ;
 
-/* IF com ELSE opcional */
+/* Atribuição */
+
+assign_stmt ::= ID ASSIGN expr SEMI
+              ;
+
+
+/* IF */
+
 if_stmt ::= IF LPAREN expr RPAREN THEN block_stmt
           | IF LPAREN expr RPAREN THEN block_stmt ELSE block_stmt
           ;
 
+
 /* WHILE */
-while_stmt ::= WHILE LPAREN expr RPAREN block_stmt ;
+
+while_stmt ::= WHILE LPAREN expr RPAREN block_stmt
+             ;
+
 
 /* Bloco */
-block_stmt ::= LBRACE stmt_list RBRACE ;
+
+block_stmt ::= LBRACE stmt_list RBRACE
+             ;
+
 
 /* Comando nulo */
-null_stmt ::= SEMI ;
+
+null_stmt ::= SEMI
+            ;
+
 
 /* Expressões */
+
 expr ::= expr ADD_OP expr
        | expr MUL_OP expr
        | expr REL_OP expr
