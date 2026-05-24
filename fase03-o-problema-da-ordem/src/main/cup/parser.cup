@@ -5,27 +5,22 @@ import java_cup.runtime.*;
 parser code {:
     // Método chamado pelo CUP quando encontra um erro sintático
     public void syntax_error(Symbol cur_token) {
-        throw new RuntimeException(
-            "Erro Sintático na linha " +
-            cur_token.left +
-            ", coluna " +
-            cur_token.right
-        );
+        throw new RuntimeException("Erro Sintático na linha " + cur_token.left + ", coluna " + cur_token.right);
     }
 :}
 
 /* ========================================================================= */
 /* DECLARAÇÃO DOS TOKENS (TERMINAIS)                                         */
+/* O CUP usará isso para gerar o sym.java que o seu Lexer precisa            */
 /* ========================================================================= */
 
 terminal IF, THEN, ELSE, WHILE;
 terminal ASSIGN, LPAREN, RPAREN, LBRACE, RBRACE, SEMI;
-terminal EOF;
 terminal String ID, NUMBER;
 terminal String ADD_OP, MUL_OP, REL_OP;
 
 /* ========================================================================= */
-/* DECLARAÇÃO DOS NÃO-TERMINAIS                                              */
+/* DECLARAÇÃO DOS NÃO-TERMINAIS (VARIÁVEIS DA GRAMÁTICA)                     */
 /* ========================================================================= */
 
 non terminal program, stmt_list, stmt;
@@ -36,10 +31,11 @@ non terminal expr;
 /* PRECEDÊNCIA E ASSOCIATIVIDADE                                             */
 /* ========================================================================= */
 
+/* TODO 1 */
+
 precedence left REL_OP;
 precedence left ADD_OP;
 precedence left MUL_OP;
-precedence right ELSE;
 
 /* ========================================================================= */
 /* REGRAS DA GRAMÁTICA                                                       */
@@ -47,21 +43,17 @@ precedence right ELSE;
 
 start with program;
 
+/* TODO 2 */
 
-/* Programa */
+program ::= stmt_list ;
 
-program ::= stmt_list EOF
-          ;
-
-
-/* Lista de comandos */
+/* TODO 3 */
 
 stmt_list ::= stmt_list stmt
             | stmt
             ;
 
-
-/* Tipos de comando */
+/* TODO 4 */
 
 stmt ::= assign_stmt
        | if_stmt
@@ -70,40 +62,24 @@ stmt ::= assign_stmt
        | null_stmt
        ;
 
+assign_stmt ::= ID ASSIGN expr SEMI ;
 
-/* Atribuição */
-
-assign_stmt ::= ID ASSIGN expr SEMI
-              ;
-
-
-/* IF */
+/* TODO 5 */
 
 if_stmt ::= IF LPAREN expr RPAREN THEN block_stmt
           | IF LPAREN expr RPAREN THEN block_stmt ELSE block_stmt
           ;
 
-
-/* WHILE */
-
 while_stmt ::= WHILE LPAREN expr RPAREN block_stmt
              ;
-
-
-/* Bloco */
 
 block_stmt ::= LBRACE stmt_list RBRACE
              | LBRACE RBRACE
              ;
 
+null_stmt ::= SEMI ;
 
-/* Comando nulo */
-
-null_stmt ::= SEMI
-            ;
-
-
-/* Expressões */
+/* TODO 6 */
 
 expr ::= expr ADD_OP expr
        | expr MUL_OP expr
